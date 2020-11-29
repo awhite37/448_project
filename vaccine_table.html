@@ -1,0 +1,148 @@
+<html>
+
+<head>
+   
+
+</head>
+<body>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" type="text/javascript"></script>
+<link href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.1.0/papaparse.min.js" type="text/javascript"></script>
+
+<script>
+    $('body').on('click', 'a', function(e) {
+    e.target.target = '_blank';
+});
+</script>
+
+<script type="text/javascript">
+function format ( d ) {
+return '<h4>Details</h4> ' +
+'<p>' + d['Details'] + '</p>';
+}
+
+
+//$.noConflict();
+//jQuery(document).ready(function($) {
+$(function() {
+// removes last line if empty from multi-line string 
+	function removeTrailingLine(long_string) {
+		var x = long_string;
+		if(x.split(/\r?\n/).pop().length == 0) {
+			return x.substring(0, x.lastIndexOf("\n"));
+		} else {
+			return x;
+		}
+	}
+$.get("data/20201123-vax-tracker-Craven.csv", function(data, status){
+    //alert("Data: " + data + "\nStatus: " + status);
+var objJson = Papa.parse(removeTrailingLine(data), { "header": true});
+var csvJson = JSON.stringify(objJson.data, null, 2);
+
+ var table = $('#vax').DataTable( { 
+     "order": [],
+     data: eval(csvJson),
+        "columns": [
+            {
+                "class":          "details-control",
+                "orderable":      false,
+                "data":           null,
+                "defaultContent": ""
+            },
+            { "data": "Candidate", "title": "Candidate", "width": "110px" },
+            { "data": "Mechanism", "title": "Mechanism", "width": "200px" },
+            { "data": "Details", "title": "Details", "visible": false }, 
+            { "data": "Sponsor", "title": "Sponsor", "width": "200px" },
+            { "data": "Trial Phase", "title": "<nobr>Trial Phase</nobr>" },
+            { "data": "Institution", "title": "Institution" },
+            //{ "data": "Funding", "title": "Funding" }
+        ],
+  });
+
+    // Add event listener for opening and closing details
+    $('#vax tbody').on('click', 'td.details-control', function () {
+        var tr = $(this).closest('tr');
+        var row = table.row( tr );
+ 
+        if ( row.child.isShown() ) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+        else {
+            // Open this row
+            row.child( format(row.data()) ).show();
+            tr.addClass('shown');
+        }
+    } );
+  var open = false;
+  $("#toggleDetails").on('click', function(evt) {
+
+    var tr = $('#vax tbody, #vax tbody').children('tr.even, tr.odd');
+    $.each (tr, function (idx, val) {
+      var row = table.row( $(this) );
+      if ( open ) {
+        // This row is already open - close it
+        row.child.hide();
+        tr.removeClass('shown');
+      }
+      else {
+        // Open this row
+        row.child( format(row.data()) ).show();
+        tr.addClass('shown');
+      }
+   });
+   open = !open;
+  });
+});
+
+});
+
+
+</script>
+
+<style type="text/css">#vax th {
+    background-color: #FBFBFB;
+  }
+
+a {
+  color: #4d638c;
+  text-decoration: underline;
+ }
+}
+#vax td, #vax th{ 
+  font-size: 14px !important;
+}
+td.details-control {
+    background: url('https://datatables.net/examples/resources/details_open.png') no-repeat center center;
+    cursor: pointer;
+}
+tr.shown td.details-control {
+    background: url('https://datatables.net/examples/resources/details_close.png') no-repeat center center;
+}
+</style>
+
+
+<div class="table-responsive">
+<div id="vax_wrapper" class="dataTables_wrapper no-footer">
+    <div class="dataTables_length" id="vax_length">
+        </div>
+        <div id="vax_filter" class="dataTables_filter">
+        </div>
+        
+        <table class="display dataTable no-footer" id="vax" style="width: 100%;" role="grid" aria-describedby="vax_info">
+        </table>
+        <div class="dataTables_info" id="vax_info" role="status" aria-live="polite">
+            
+        </div>
+        <div class="dataTables_paginate paging_simple_numbers" id="vax_paginate">
+            </div>
+            </div>
+</div>
+
+
+</body>
+</html>

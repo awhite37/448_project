@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="author" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<title>Project Six-Feet-Apart</title>
+
+
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/font-awesome.min.css">
+
+<!-- Main css -->
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css?family=Lora|Merriweather:300,400" rel="stylesheet">
+<link rel="icon" href="coronavirus.png" />
+<style>
+.aligncenter {
+    text-align: center;
+}
+</style>
+
+<script>
+var imgArray = ['1.png', '2.png', '3.png'];
+
+baseURL = "imgs/images/";
+numImages = 3;
+curImage = 1;
+
+function f_slideshow( xflip ) {
+curImage = curImage + xflip;
+if (curImage > numImages)
+{ curImage = numImages ; }
+if (curImage == 0)
+{ curImage = 1 ; }
+document.getElementById("slide").src = baseURL + imgArray[curImage-1];
+}
+
+function f_start() {
+   curImage = 1
+   document.getElementById("slide").src = baseURL + imgArray[0];
+}
+function f_end() {
+   curImage = numImages
+   document.getElementById("slide").src = baseURL + imgArray[numImages-1];
+}
+
+
+var imgArray2 = ['images2/1.png', 'images2/2.png', 'images2/3.png', 'images2/4.png', 'images2/5.png', 'images2/6.png', 'images2/7.png', 'images2/8.png'];
+
+baseURL2 = "imgs/";
+numImages2 = 8;
+curImage2 = 1;
+
+function f_slideshow2( xflip ) {
+curImage2 = curImage2 + xflip;
+if (curImage2 > numImages2)
+{ curImage2 = numImages2 ; }
+if (curImage2 == 0)
+{ curImage2 = 1 ; }
+document.getElementById("slide2").src = baseURL2 + imgArray2[curImage2-1];
+}
+
+function f_start2() {
+   curImage2 = 1
+   document.getElementById("slide2").src = baseURL2 + imgArray2[0];
+}
+function f_end2() {
+   curImage2 = numImages2
+   document.getElementById("slide2").src = baseURL2 + imgArray2[numImages2-1];
+}
+
+</script>
+
+
+
+</head>
+
+
+<body>
+
+<!-- PRE LOADER -->
+
+<div class="preloader">
+     <div class="sk-spinner sk-spinner-wordpress">
+          <span class="sk-inner-circle"></span>
+     </div>
+</div>
+
+
+<!-- Navigation section  -->
+
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+     <div class="container">
+
+          <div class="navbar-header">
+               <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon icon-bar"></span>
+                    <span class="icon icon-bar"></span>
+                    <span class="icon icon-bar"></span>
+               </button>
+               <a href="index.html" class="navbar-brand">COVID-19 Research</a>
+          </div>
+          <div class="collapse navbar-collapse">
+               <ul class="nav navbar-nav navbar-right">
+                    <li ><a href="index.html">Home</a></li>
+                    <li><a href="history.html">History</a></li>
+                    <li><a href="strains.html">COVID Strains</a></li>
+                    <li><a href="vaccines.html">Vaccines</a></li>
+                    <li class="active"><a href="algorithms.html">Algorithms</a></li>
+                    <li><a href="contributors.html">Contributors</a></li>
+               </ul>
+          </div>
+
+  </div>
+</div>
+
+<!-- Header -->
+
+<section id="home" class="main-about parallax-section">
+     <div class="overlay"></div>
+     <div class="container">
+          <div class="row">
+
+               <div class="col-md-12 col-sm-12">
+                    <h1>All About Algorithms</h1>
+               </div>
+
+          </div>
+     </div>
+</section>
+
+<!-- Content -->
+<section id="algorithms">
+     <div class="container">
+          <div class="row">
+
+               <div class="col-md-offset-1 col-md-10 col-sm-12">
+                    
+                  
+                    <div class="clearfix"></div>
+
+                    <p><br>This page describes the two main algorithmic concepts used in our research: sequence alignment and phylogenetic tree construction. In addition to some introductory examples of both topics, we examine and discuss the the Clustal multiple sequence alignment and phylogeny algorithms used in our research into different strains of the SARS-CoV-2 virus. </p>
+                    
+                    <h2>Sequence Alignment</h2>
+                     
+                    <h3>Basics</h3>
+                     <p>In the context of bioinformatics, algorithms for sequence alignment take in long input strings representing DNA, RNA, or protien and arrange them in a way to identify common substrings. A simple way to do this is by inserting gaps in the strings in the right places. We assign a cost to inserting a gap and to mismatched characters. How the alignments are scored is a complex biological question which must take into account what is being matched as some matches may be more or less significant than others. For simplicity, here we will count any match as +1 and any mismatch or inserted gap as +0. Consider the example of the two amino acid strings <b>AACCTTGG</b> and <b>ACACTGTGA</b>. One possible alignment, which has a score of 4, is:</p>
+                     <div class="aligncenter"><p><b><span style="color: #cc0000">A</span>A<span style="color: #cc0000">C</span>_<span style="color: #cc0000">C</span><span style="color: #cc0000">T</span>TGG</b><br>
+                      <b><span style="color: #cc0000">A</span>_<span style="color: #cc0000">C</span>A<span style="color: #cc0000">C</span><span style="color: #cc0000">T</span>G__</b></p></div>
+                      
+                      <p>But how do we find the <b>best</b> possible alignment? To accomplish this we must consider the cost of every possible gap that could be inserted in either string. That's a lot of possibilities, especially if the strings are very long (and in the application of biology, they are!). One efficient way to solve this problem is by using a dynamic programming algorithm. In this algorithm a table of possible values is filled out in a bottom-up approach to avoid re-computing values. For aligning two strings, the rows and columns of the table are given by all prefix strings of each input string. For example, continuing with the strings <b>AACCTTGG</b> and <b>ACACTGTGA</b>, the empty table would look like this:</p>
+                      <br><div class="aligncenter">
+                        <img src="/imgs/table.png" height= "250px">
+                    </div><br>
+                      <p> Each value of the table is computed by comparing the cost of adding one blank to the first string, adding one to the second string, or adding to neither. In addition to the score, the table also stores the state of the two strings in each cell to keep track of how each score was arrived at. Once the table is complete, a solution can be found by identifying the appropriate table value. In this case the value in the bottom right corner holds the solution, since it uses all letters of both strings. The solution is the state of the strings in the solution cell. Here is what the score table looks like after running the algorithm:</p>
+                      <br> <div class="aligncenter">
+                        <img src="/imgs/table2.png" height= "250px">
+                    </div> <br>
+                    <p>From this we get our optimal alignment score of 6. To find the aligment, we check the state of the strings. Here is a view of the saved string states in the table: </p>
+                    <br> <div class="aligncenter">
+                        <img src="/imgs/table3.png" height= "350px">
+                    </div> <br>
+                        <p>From this we get our optimal alignment solution: </p>
+                    <div class="aligncenter"><p><b><span style="color: #cc0000">A</span>_<span style="color: #cc0000">A</span>C<span style="color:#cc0000">C</span><span style="color: #cc0000">T</span>_<span style="color: #cc0000">T</span><span style="color: #cc0000">G</span>G</b><br>
+                      <b><span style="color: #cc0000">A</span>C<span style="color: #cc0000">A</span>_<span style="color: #cc0000">C</span><span style="color: #cc0000">T</span>G<span style="color: #cc0000">T</span><span style="color: #cc0000">G</span>A</b></p></div>
+                      
+
+                    <h3>Multiple Sequence Alignment</h3>
+                     <p>Now we know of a way to compute sequence alignment of two strings (also called pairwise alignment), but in real world bioinformatics applications, such as comparing different strains of COVID-19, we need to be able to align many sequences to each other all at the same time. Multiple sequence alignment is an extension of the pairwise alignment problem, where in the context of bioinformatics, matching subsequences across multiple input strings can be used to study how they may be evolutionarily related and can be used to construct phylogenetic trees (more on those later). We could still try our dynamic programming approach, but we must add a dimension to the table for each additional string we are aligning. If the number of strings is more than just a few, this quickly becomes too computationally expensive (both in runtime and memory requirements) to be feasible. Multiple sequence alignment is a difficult problem to solve algorithmically, and in the following section we will examine in more detail the algorithm used for this research to align the genome sequences of different strains of COVID-19.</p>
+
+                    <h3>Clustal Omega Sequence Alignment</h3>
+                     <p>The tools we used to conduct our research into the phylogeny of coronavirus strains rely on a program called <a target:"_blank" href="http://www.clustal.org/omega/">Clustal Omega</a>: a general purpose multiple sequence alignment program for protein, DNA, and RNA. Clustal Omega's algorithm works as follows. First, a pairwise alignment is done for all possible pairs of sequences using the k-tuple method. The k-tuple method is not guarenteed to produce the optimal result, but is a fast way to approximate the optimal solution for a large number of input sequences. Once the pairwise alignments are scored, the mBed method is used to encode each sequence into an n-dimensional vector, where n is proportional to the log of the number of sequences being aligned. Each element in the vector for a sequence is simply the distance from that sequence to one of n "reference sequences" from the pairwise alignment. These sequence vectors are then used in a k-means clustering. The mBed step greatly imporves the speed of the clustering and allows the guide trees to be computed in O(Nlog(N)) time (where N is the number of input sequences) without any loss of accuracy from the conventional methods. The multiple sequence alignment is completed by successively aligning larger and larger subalignments following the guide tree by using the HHalign package for aligning two profile Hidden Markov Models. In benchmark testing, Clustal Omega was shown to outperform similar multiple sequence alignment tools in both execution time and accuracy.
+                     
+                     
+                    <p></p>
+                    
+                <h2>Pylogenetic Trees</h2>
+                    
+                    <h3>Basics</h3>
+                     <p>A phylogenetic tree, also called an evolutionary tree or phylogeny, is a way of modeling evolutionary relationships that can be inferred from sequence alignments in a graph structure. After running a sequence alignment algorithm on a set of genomes, the alignment can be used to create a distance matrix to represent the similarites and differences of the genomes being compared. In a distance matrix, the entry in row i column j is the "distance" between the ith and jth genome. This distance can be computed in a variety of ways. One simple example is the number of differing characters in the ith and jth genome, as shown in the figure below. Clearly all species in the table have a distance of 0 from themselves. The distance between Chimp and Human is 3 because their respective alignments differ in 3 locations. The rest of the distances in the matrix are found in the same way. </p>
+                     <br> <div class="aligncenter">
+                        <img src="/imgs/distance_matrix.png" height= "150px">
+                        <p><a target="_blank"  href="https://www.bioinformaticsalgorithms.org/">[2]</a></p>
+                    </div> <br>
+                        <p>However the distance matrix is construced, it must satisfy the folowing properties: <br> 
+                            <b>(1)</b> Symmetric<br>
+                            <b>(2)</b> Non-negative<br>
+                            <b>(3)</b> Satisfies the Triangle Inequality
+                            <br> 
+                            <p>Going back to our example, we can see that the values are symmetric (the distance between Chimp and Human is the same as the distance between Human and Chimp, and similarly for all other pairs of species) and there are no negative values. To satisfy the triangle inequality, it must be true that for all values i, j, and k, summing the values at (i,j) and (j,k) is greater than or equal to the value at (i,k). For example, if i=0, j=2, k=1, then (i,j) + (j,k) = 6 + 7 = 13, and (i,k) = 3, so the inequality is satisfied. The rest of the values may be similarly verified.
+                            </p>
+                            <p>Once a distance matrix is computed for the sequences being analyzed, it can be used to construct the phylogentic tree. Graphs representing phylogenetic trees are connected (there exists a path between every pair of nodes in the graph), and contain no cycles. To create a tree from a distance matrix, each genome being compared is added to the graph as a node. The nodes are then connected with edge weights representing the distances from the matrix. For a tree to satisfy a distance matrix, it must be true that for every entry (i,j) in the matrix, node i and node j have a path between them with total edge weight equal to the distance of the matrix entry. The figure below is a phylogentic tree graph that satisfies our example distance matrix.</p>
+                            <br> <div class="aligncenter">
+                            <img src="/imgs/example_tree.png" height= "150px">
+                            <p>[2]</p></div> <br>
+                        <p>The following section describes an algorithm for constructing such a tree from a distance matrix and provides two interactive examples of tree construction from sample data.</p>
+                        
+                    <h3>Additive Phylogeny</h3>
+                     <p>One algorithm for constructing a phylogenetic tree from a distance matrix involves recursively adding the nodes of the tree one at a time. To understand this algorithm we must first understand the concept of limb length. The limb length of a leaf node is the distance between that node and its parent node. For example, in the tree from the previous section, the Seal node has a limb length of 2. Because of the properties required in the construction of the distance matrix, it can be proved that the limb length of a leaf node j for a distance matrix D is equal to the minimum value of [D(i,j) + D(j,k) - D(i,k)] / 2 computed over all leaf nodes i and k. With this formula for computing the limb length of any node on the tree, we can implement a recursive algorithm to build the tree from the distance matrix using the following four steps:
+                     <br>
+                    <br>
+                     <b>(1)</b> Pick any node j in the distance matrix and calculate its limb length. "Trim" node j from the tree by subracting its limb length from all off-diagonal values in row j and column j. Now create a new distance matrix with node j removed by removing row j and column j from the original distance matrix. 
+                     <br>
+                     <b>(2)</b> Make a recursive call to construct the tree from the distance matrix with node j removed.
+                     <br>
+                     <b>(3)</b> Find the right place to insert node j back into the tree resulting from the recursive call.
+                     <br>
+                     <b>(4)</b> Attach node j in the location identified in step (3) with a limb length equal to its original computed limb length.
+                     <br>
+                     <br>
+                        The tricky step here is (3): identifying the right location to put node j back into the tree. Consider the matrix resulting from "trimming" node j from the tree. We'll call this trimmed matrix D'. Since the limb length of j in D' is 0, we know from our formula that there must exist leaf nodes i and j such that [D'(i,j) + D'(j,k) - D'(i,k)] / 2 = 0, or more simply, D'(i,k) = D'(i,j) + D'(j,k). Then to find the right attatchment point for node j, we simply find the nodes i and k that satisfy this property in D'. Then we attach node j to a point that is distance D'(i,j) away from node i on the path to node j. If there is already a node at this distance, we attach j to it. Otherwise, we add a new internal node that splits the edge in the right spot and attach j to this new node. The base case for our recursive algorithm is the case of only two nodes in the distance matrix, where we simply return a tree connecting these two nodes with an edge length equal to their distance from each other in the matrix.
+                        <br><br>
+                        The following two examples show a distance matrix and the construction of the corresponding phylogentic tree using this algorithm at each recursive step. The add node and delete node buttons will increment or decrement by one step respectively. The start button resets the tree to the base case and the end button skips to the final completed tree.
+                        </p>
+                     
+
+                
+                <div class="aligncenter">
+                    <h3>A Small Example</h3>
+                    <p>In this toy example, the leaf nodes are v1, v2, v3, and v4, with the following distance matrix:</p>
+                    <img src="/imgs/ex_matrix.png" width= "200px">
+                    <br>
+                    <br>
+                    <p>This tree is constructed in three steps. The first is the base case, where v1 and v2 are connected. In the next step, v3 is added into the tree by creating the new internal node v6. Finally, v4 is added by creating the internal node v5. </p>
+                    <input type="button" value="<< Start" name="cb_prev" onclick="f_start()">
+                    <input type="button" value="< Delete Node" name="cb_prev" onclick="f_slideshow(-1)">
+                    <input type="button" value="Add Node >" name="cb_next" onclick="f_slideshow(1)">
+                    <input type="button" value="End >>" name="cb_prev" onclick="f_end()">
+                    <br>
+                    <img src="/imgs/images/1.png" id="slide" height= "400px">
+                </div>
+
+                    
+                <div class="aligncenter">
+                    <h3>A Larger Example</h3>
+                    <p>In this more complex example, a tree is constructed from real world data. The following distance matrix is derived from a pairwise sequence alignment of Spike proteins from coronaviruses extracted from various different species.</p>
+                    <img src="/imgs/animals_matrix.png"  width= "500px">
+                    <br>
+                    <br>
+                    <input type="button" value="<< Start" name="cb_prev" onclick="f_start2()">
+                    <input type="button" value="< Delete Node" name="cb_prev" onclick="f_slideshow2(-1)">
+                    <input type="button" value="Add Node >" name="cb_next" onclick="f_slideshow2(1)">
+                    <input type="button" value="End >>" name="cb_prev" onclick="f_end2()">
+                    
+                    <br>
+                    <img src="/imgs/images2/1.png" id="slide2" height= "400px">
+
+                </div>
+                    
+                    <h3>Clustal Phylogentic Trees</h3>
+                     <p>To get the phylogenetic trees used in our research, we ran a tool which uses the ClustalW2 package to generate a tree. ClustalW2 is a program from the same creators of Clustal Omega which can construct phylogentic trees from an input multiple sequence alignment. After running our multiple sequence alignment of the coronavirus strains, it was input into a web service called Simple Phylogeny, which uses ClustalW2 methods to construct a tree and outputs a Newick formated text file which can in turn be used an input for phylogentic tree visualization tools. The tool allows two different methods for tree construction: Neighbor-Joining, which is similar to the additive algorithms described above, and UPGMA, which is the method used by Clustal Omega to construct guide trees.</p>
+               <br>
+               </div>
+
+
+          </div>
+     </div>
+</section>
+
+
+<!-- Footer Section -->
+
+<footer>
+     <div class="container">
+          <div class="row">
+
+               
+          </div>
+     </div>
+</footer>
+
+<!-- Back top -->
+<a href="#back-top" class="go-top"><i class="fa fa-angle-up"></i></a>
+
+<!-- SCRIPTS -->
+
+<script src="js/jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.parallax.js"></script>
+<script src="js/custom.js"></script>
+
+</body>
+</html>
